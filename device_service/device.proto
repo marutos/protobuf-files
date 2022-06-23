@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package device;
+
+option go_package = "protobuf-files/device_service";
+
+message DeviceRequest{
+  string first_name = 1;
+}
+
+message DeviceResponse{
+  string result = 1;
+}
+
+service DeviceService{
+  rpc Device(DeviceRequest) returns (DeviceResponse);
+}
