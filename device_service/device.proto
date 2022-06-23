@@ -4,14 +4,40 @@ package device;
 
 option go_package = "protobuf-files/device_service";
 
-message DeviceRequest{
-  string first_name = 1;
+import "google/protobuf/Empty.proto";
+
+message PeripheralDevice {
+  string name = 1;
+  float value = 2;
 }
 
-message DeviceResponse{
-  string result = 1;
+message DeviceId{
+  string id = 1;
+}
+
+message DeviceRecordData{
+  string id = 1;
+  optional string device_name = 2;
+  repeated PeripheralDevice inputs = 3;
+}
+
+message DeviceOutputData{
+  string id = 1;
+  repeated PeripheralDevice outputs = 2;
+  repeated PeripheralDevice notifications = 3;
 }
 
 service DeviceService{
-  rpc Device(DeviceRequest) returns (DeviceResponse);
+
+  // This method records the provided data by the device's inputs
+  // the purpose of this method it's just to save the information each
+  // time that is called without execute any calculation
+  rpc RecordData(DeviceRecordData) returns (google.protobuf.Empty);
+
+  // This method contains all the logic to calculate the right output
+  // given an input data
+  rpc GetDeviceOutput(DeviceRecordData) returns (DeviceOutputData);
+
+  // This method retrieves the information of a certain device given his id
+  rpc GetDeviceRecordedData(DeviceId) returns (DeviceRecordData);
 }
